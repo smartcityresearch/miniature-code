@@ -63,6 +63,7 @@ void displayShowVersions(int currentVersion, int latestVersion)
 {
   disp1.showNumberDec(currentVersion, false);
   disp2.showNumberDec(latestVersion, false);
+
   disp3.clear();
   disp4.clear();
 }

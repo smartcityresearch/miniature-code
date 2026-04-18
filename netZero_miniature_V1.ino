@@ -12,16 +12,13 @@ void setup()
 {
 
   Serial.begin(115200);
-
   displayInit();
-
   wifiInit(WIFI_SSID, WIFI_PASSWORD);
-
   otaSetVersion(CURRENT_VERSION);
   otaSetUrls(VERSION_URL, FIRMWARE_URL);
   otaInit();
-  otaHandle(true);
-
+  otaFetchVersionOnly();
+  delay(2000);  
   relayInit();
   ledInit();
   otaWebInit();

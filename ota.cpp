@@ -41,9 +41,9 @@ void otaInit()
 
 // ---------------- HANDLE ----------------
 
-void otaHandle(bool forceCheck)
+void otaHandle()
 {
-  if (!forceCheck && (millis() - lastOTACheck < OTA_CHECK_INTERVAL))
+  if (millis() - lastOTACheck < OTA_CHECK_INTERVAL)
     return;
 
   lastOTACheck = millis();
@@ -72,14 +72,12 @@ void otaHandle(bool forceCheck)
     int latestVersion = atoi(payload.c_str());
 
     otaWebSetRemoteVersion(latestVersion); // ✅ important
-    if (forceCheck)
-    {
-      displayShowVersions(_currentVersion, latestVersion);
-      delay(2000);
-    }
 
     Serial.println("Current Version: " + String(_currentVersion));
     Serial.println("Latest Version: " + String(latestVersion));
+
+    // 🔥🔥 ADD THIS LINE ONLY
+    displayShowVersions(_currentVersion, latestVersion);
 
     if (latestVersion > _currentVersion)
     {
@@ -101,7 +99,64 @@ void otaHandle(bool forceCheck)
 
   http.end();
 }
+
+//----------------latest version check---------
+void otaFetchVersionOnly()
+{
+  if (!wifiIsConnected())
+    return;
+
+  Serial.println("\nFetching version (no OTA)...");
+
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient http;
+  http.begin(client, _versionUrl);
+
+  int httpCode = http.GET();
+
+  if (httpCode == HTTP_CODE_OK)
+  {
+    String payload = http.getString();
+    payload.trim();
+
+    int latestVersion = atoi(payload.c_str());
+
+    otaWebSetRemoteVersion(latestVersion);
+
+    Serial.println("Current Version: " + String(_currentVersion));
+    Serial.println("Latest Version: " + String(latestVersion));
+
+    // ✅ SHOW ON DISPLAY
+    displayShowVersions(_currentVersion, latestVersion);
+
+    if (latestVersion > _currentVersion)
+    {
+      Serial.println("Update Available!");
+      otaWebSetStatus("Update Available");
+    }
+    else
+    {
+      otaWebSetStatus("Up-to-date");
+    }
+  }
+  else
+  {
+    Serial.println("Version fetch failed: " + String(httpCode));
+    otaWebSetStatus("Version fetch failed");
+  }
+
+  http.end();
+}
+
+
+
+
 // ---------------- OTA PROCESS ----------------
+
+
+
 
 void performOTA()
 {
