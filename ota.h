@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 void otaInit();
-void otaHandle();
+void otaHandle(bool forceCheck = false);
 void otaSetVersion(int version);
 void otaSetUrls(String versionUrl, String firmwareUrl);
 

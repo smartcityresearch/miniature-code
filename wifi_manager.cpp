@@ -1,7 +1,7 @@
 #include "wifi_manager.h"
 #include <WiFi.h>
 #include "display_manager.h"
-
+#include "config.h"
 void wifiInit(const char *ssid, const char *password)
 {
 
@@ -27,6 +27,7 @@ void wifiInit(const char *ssid, const char *password)
   Serial.println("\nWiFi Connected!");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+  Serial.println("Current Version : " + String(CURRENT_VERSION));
   displayShowIP(WiFi.localIP().toString());
   delay(3000);
 }

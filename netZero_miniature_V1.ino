@@ -8,17 +8,20 @@
 int count1 = 0, count2 = 0, count3 = 0, count4 = 0;
 unsigned long lastOTACheck = 0;
 
-void setup() {
+void setup()
+{
 
   Serial.begin(115200);
+
+  displayInit();
 
   wifiInit(WIFI_SSID, WIFI_PASSWORD);
 
   otaSetVersion(CURRENT_VERSION);
   otaSetUrls(VERSION_URL, FIRMWARE_URL);
   otaInit();
+  otaHandle(true);
 
-  displayInit();
   relayInit();
   ledInit();
   otaWebInit();
@@ -33,45 +36,47 @@ void setup() {
   pinMode(SOLAR_LED, OUTPUT);
 }
 
-void loop() {
+void loop()
+{
   otaWebHandle();
-  if (millis() - lastOTACheck >= OTA_CHECK_INTERVAL ) {
+  if (millis() - lastOTACheck >= OTA_CHECK_INTERVAL)
+  {
     lastOTACheck = millis();
     otaHandle();
   }
 
-  if(digitalRead(SOLAR_SW) == LOW)
+  if (digitalRead(SOLAR_SW) == LOW)
   {
     count1++;
     digitalWrite(SOLAR_LED, HIGH);
-    setCarbon(0,100);
+    setCarbon(0, 100);
   }
-  else if(digitalRead(RAIN_SW) == LOW)
+  else if (digitalRead(RAIN_SW) == LOW)
   {
     count2++;
     relayControl(1, 0, 0, 0);
-    setCarbon(60,40);
+    setCarbon(60, 40);
   }
-  else if(digitalRead(STP_SW) == LOW)
+  else if (digitalRead(STP_SW) == LOW)
   {
     count3++;
     relayControl(0, 1, 0, 0);
-    setCarbon(50,50);
+    setCarbon(50, 50);
   }
-  
-  else if(digitalRead(GRID_SW) == LOW)
+
+  else if (digitalRead(GRID_SW) == LOW)
   {
     count4++;
     digitalWrite(GRID_LED, HIGH);
-    setCarbon(80,20);
+    setCarbon(80, 20);
   }
 
-  else if(digitalRead(BOREWELL_SW) == LOW)
+  else if (digitalRead(BOREWELL_SW) == LOW)
   {
     relayControl(0, 0, 1, 0);
-    setCarbon(70,30);
+    setCarbon(70, 30);
   }
- 
+
   displayUpdate(count1, count2, count3, count4);
   delay(20);
 }

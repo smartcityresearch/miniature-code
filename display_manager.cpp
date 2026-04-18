@@ -35,6 +35,7 @@ void displayShowOtaProgress(int progress)
 
 void displayShowIP(String ip)
 {
+
   int parts[4] = {0};
   int index = 0;
 
@@ -56,4 +57,12 @@ void displayShowIP(String ip)
   disp2.showNumberDec(parts[1], false);
   disp3.showNumberDec(parts[2], false);
   disp4.showNumberDec(parts[3], false);
+}
+
+void displayShowVersions(int currentVersion, int latestVersion)
+{
+  disp1.showNumberDec(currentVersion, false);
+  disp2.showNumberDec(latestVersion, false);
+  disp3.clear();
+  disp4.clear();
 }

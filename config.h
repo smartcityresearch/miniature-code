@@ -6,7 +6,7 @@
 #define WIFI_PASSWORD "f6s68VHJ89mC"
 
 // -------- OTA --------
-#define CURRENT_VERSION 4
+#define CURRENT_VERSION 2
 #define VERSION_URL "https://raw.githubusercontent.com/smartcityresearch/miniature-code/main/var.txt"
 #define FIRMWARE_URL "https://raw.githubusercontent.com/smartcityresearch/miniature-code/main/firmware.bin"
 #define OTA_CHECK_INTERVAL 60000

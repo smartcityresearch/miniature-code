@@ -21,7 +21,7 @@ void performOTA(); // forward declaration
 void otaSetVersion(int version)
 {
   _currentVersion = version;
-  otaWebSetCurrentVersion(version);   // ✅ update web
+  otaWebSetCurrentVersion(version); // ✅ update web
 }
 
 void otaSetUrls(String versionUrl, String firmwareUrl)
@@ -35,15 +35,15 @@ void otaSetUrls(String versionUrl, String firmwareUrl)
 void otaInit()
 {
   Serial.println("OTA Init Done");
-  otaWebSetStatus("Idle");   // ✅ initial state
+  otaWebSetStatus("Idle"); // ✅ initial state
   otaWebSetProgress(0);
 }
 
 // ---------------- HANDLE ----------------
 
-void otaHandle()
+void otaHandle(bool forceCheck)
 {
-  if (millis() - lastOTACheck < OTA_CHECK_INTERVAL)
+  if (!forceCheck && (millis() - lastOTACheck < OTA_CHECK_INTERVAL))
     return;
 
   lastOTACheck = millis();
@@ -71,7 +71,12 @@ void otaHandle()
 
     int latestVersion = atoi(payload.c_str());
 
-    otaWebSetRemoteVersion(latestVersion);   // ✅ important
+    otaWebSetRemoteVersion(latestVersion); // ✅ important
+    if (forceCheck)
+    {
+      displayShowVersions(_currentVersion, latestVersion);
+      delay(2000);
+    }
 
     Serial.println("Current Version: " + String(_currentVersion));
     Serial.println("Latest Version: " + String(latestVersion));
@@ -136,7 +141,7 @@ void performOTA()
 
       while (http.connected() && written < contentLength)
       {
-        otaWebHandle();   // 🔥 keep web alive
+        otaWebHandle(); // 🔥 keep web alive
 
         size_t available = stream->available();
 
@@ -147,8 +152,10 @@ void performOTA()
 
           int progress = (written * 100) / contentLength;
 
-          if (progress < 1) progress = 1;
-          if (progress > 100) progress = 100;
+          if (progress < 1)
+            progress = 1;
+          if (progress > 100)
+            progress = 100;
 
           displayShowOtaProgress(progress);
           otaWebSetProgress(progress);
