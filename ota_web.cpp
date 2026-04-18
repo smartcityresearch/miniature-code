@@ -20,7 +20,7 @@ String generateHTML() {
   html += ".box{margin:20px;padding:20px;border-radius:10px;background:#222;}";
   html += "</style></head><body>";
 
-  html += "<h2>ESP32 OTA Dashboard</h2>";
+  html += "<h2>NetZero OTA Dashboard</h2>";
 
   html += "<div class='box'>";
   html += "<p><b>Current Version:</b> " + String(currentVersion) + "</p>";
